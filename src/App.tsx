@@ -38,34 +38,7 @@ const App = () => {
     setTaskName(event.target.value)
   }
 
-  const onDoneTask = (event: React.ChangeEvent<HTMLInputElement>, id: number) => {
-    const filteredList = tasks.filter((task) => {
-      return task.id === id;
-    });
-    filteredList[0].isDone = event.target.checked;
-    saveTasks([...tasks]);
-  }
-
-  const addList = (task: Task) => {
-    return <li key={task.id} className='task-item'>
-      <input
-        type="checkbox"
-        checked={task.isDone}
-        onChange={(event) => onDoneTask(event, task.id)} />
-      <span>{task.name}</span>
-      <DeleteIcon style={{ marginRight: "-150px" }} onClick={() => deleteTask(task.id)} />
-    </li>
-  }
-
-  const deleteTask = (id: number) => {
-    const filteredList = tasks.filter((task) => {
-      return task.id !== id;
-    });
-    saveTasks([...filteredList]);
-  }
-
   const addTask = () => {
-
     if (taskName.length < 5 && taskName.length > 0) {
       return (
         alert('Task length should be more than 5 character')
@@ -100,6 +73,31 @@ const App = () => {
     localStorage.setItem('tasks', JSON.stringify(value));
   }
 
+  const addList = (task: Task) => {
+    return <li key={task.id} className='task-item'>
+      <input
+        type="checkbox"
+        checked={task.isDone}
+        onChange={(event) => onDoneTask(event, task.id)} />
+      <span>{task.name}</span>
+      <DeleteIcon style={{ marginRight: "-150px" }} onClick={() => deleteTask(task.id)} />
+    </li>
+  }
+
+  const onDoneTask = (event: React.ChangeEvent<HTMLInputElement>, id: number) => {
+    const filteredList = tasks.filter((task) => {
+      return task.id === id;
+    });
+    filteredList[0].isDone = event.target.checked;
+    saveTasks([...tasks]);
+  }
+
+  const deleteTask = (id: number) => {
+    const filteredList = tasks.filter((task) => {
+      return task.id !== id;
+    });
+    saveTasks([...filteredList]);
+  }
 
 
   return (

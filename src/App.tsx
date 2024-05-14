@@ -11,12 +11,28 @@ type Task = {
 const App = () => {
   const [taskName, setTaskName] = useState<string>('')
   const [tasks, setTask] = useState<Task[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false)
+    }, 1000)
+  }, [])
+
   useEffect(() => {
     const tasks: string | null = localStorage.getItem('tasks');
     if (tasks) {
       setTask(JSON.parse(tasks));
     }
   }, []);
+
+  if (loading) {
+    return (
+      <div className="loader25">
+        <span>Loading...</span>
+      </div>
+    )
+  }
 
   const onChangeText = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTaskName(event.target.value)
@@ -32,10 +48,12 @@ const App = () => {
 
   const addList = (task: Task) => {
     return <li key={task.id} className='task-item'>
-      <input type="checkbox" checked={task.isDone} onChange={(event) => onDoneTask(event, task.id)} />
-          <span>{task.name}</span>                      
-      {/* <button onClick={() => deleteTask(task.id)}>Delete</button> */}
-      <DeleteIcon style={{marginRight: "-150px"}} onClick={() => deleteTask(task.id)} /> 
+      <input
+        type="checkbox"
+        checked={task.isDone}
+        onChange={(event) => onDoneTask(event, task.id)} />
+      <span>{task.name}</span>
+      <DeleteIcon style={{ marginRight: "-150px" }} onClick={() => deleteTask(task.id)} />
     </li>
   }
 
@@ -53,13 +71,13 @@ const App = () => {
         alert('Task length should be more than 5 character')
       )
     }
-    else if(taskName.length === 0){
-      return(
+    else if (taskName.length === 0) {
+      return (
         alert('Task Field is Empty. Enter the Task')
       )
     }
-    else if(taskName.length > 20){
-      return(
+    else if (taskName.length > 20) {
+      return (
         alert('Task should be less than 20 character')
       )
     }
@@ -82,17 +100,18 @@ const App = () => {
     localStorage.setItem('tasks', JSON.stringify(value));
   }
 
+
+
   return (
     <div className='container'>
       <h1>To-Do-Task-App</h1>
 
       <div className='box'>
-        <input type='text' value={taskName} onChange={onChangeText} onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+        <input type='text' placeholder='Enter Task' value={taskName} onChange={onChangeText} onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
           if (event.key === 'Enter') {
             addTask();
           }
         }}></input>
-
         <button onClick={addTask}>Add Task</button>
       </div>
 
